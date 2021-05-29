@@ -13,12 +13,27 @@ doWork("刷牙", 2000, function (err, result) {
     return;
   }
   console.log(result);
-});
+  doWork("吃早餐", 3000, function (err, result) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(result);
 
-doWork("吃早餐", 3000, function (err, result) {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log(result);
+    doWork("寫功課", 5000, function (err, result) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(result);
+
+      doWork("吃午餐", 3000, function (err, result) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        console.log(result);
+      });
+    });
+  });
 });
