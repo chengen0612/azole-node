@@ -31,8 +31,15 @@
 
       // xhr.addEventListener('load', function() {});
       xhr.onload = function () {
-        message.innerText = `非同步請求 load ${this.responseText}`;
+        if (this.status === 200) {
+          message.innerText = `非同步請求 load ${this.responseText}`;
+        } else {
+          message.innerText = `非同步請求 有問題 ${this.status}`;
+        }
       };
+
+      // xhr.onerror
+      // xhr.onprogress
 
       xhr.send();
     });
