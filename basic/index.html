@@ -20,5 +20,31 @@
     countBtn.addEventListener("click", function () {
       count.innerText = parseInt(count.innerText, 10) + 1;
     });
+
+    asyncBtn.addEventListener("click", function () {
+      // XMLHttpRequest
+      var xhr = new XMLHttpRequest();
+      // HTTP method: GET, POST, ....
+      // URL
+      // async: true / false
+      xhr.open("GET", "http://34.217.120.25:3000", true);
+      xhr.onload = function () {
+        message.innerText = `非同步請求 load ${this.responseText}`;
+      };
+      xhr.send();
+    });
+
+    syncBtn.addEventListener("click", function () {
+      // XMLHttpRequest
+      var xhr = new XMLHttpRequest();
+      // HTTP method: GET, POST, ....
+      // URL
+      // async: true / false
+      xhr.open("GET", "http://34.217.120.25:3000", false);
+      xhr.onload = function () {
+        message.innerText = `同步請求 load ${this.responseText}`;
+      };
+      xhr.send();
+    });
   </script>
 </html>
