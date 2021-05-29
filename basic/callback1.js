@@ -5,6 +5,8 @@ let doWork = function (job, timer, cb) {
   }, timer);
 };
 
+let dt = new Date();
+console.log(`開始工作 at ${dt.toISOString()}`);
 doWork("刷牙", 2000, function (err, result) {
   if (err) {
     console.error(err);
