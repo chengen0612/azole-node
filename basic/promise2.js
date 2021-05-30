@@ -6,7 +6,9 @@ let doWork = function (job, timer, cb) {
 };
 
 // new Promise(function (resolve, reject) {});
-//
+// Promise 是一個表示非同步運算的「最終」「完成或失敗」的「物件」
+//    最終成功 --人--> resolve --Promise--> then
+//    最終失敗 --人--> reject  --Promise--> catch
 let doWorkPromise = function (job, timer, success) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
