@@ -1,4 +1,6 @@
 /*****************************************************************
+ * 參考文章: https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
+ *
  * 作法 1 跟 作法 2，為了不要互相干擾，我先把作法1 註解起來。
  *
  * 執行以下步驟:
