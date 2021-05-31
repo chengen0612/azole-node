@@ -70,7 +70,7 @@ doWorkPromise("刷牙", 2000, true)
     (reject) => {
       console.log("中途攔截B", reject);
       // 試試看這行有註解 跟 沒註解的差異
-      return doWorkPromise("寫功課", 5000, true);
+      // return doWorkPromise("寫功課", 5000, true);
     }
   )
   .then(
