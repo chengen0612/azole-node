@@ -82,7 +82,8 @@ console.log("outside");
 
 // 11 Event loop 就會去看 Q，因為檔案未讀完，所以 Q 空，沒東西搬
 // 12 Event loop 就會去看 Q，因為檔案未讀完，所以 Q 空，沒東西搬
-// ....
+// ....根據 System Performance 書本提供的表格
+// ... 大概要等個 2 - 6 days (誤)
 // 89 Event loop 就會去看 Q，因為檔案讀完，所以 Q 有東西了 --> readFile 的 cb
 // 90 cb --> stack
 // 91 因為成功，所以在 cb 裡呼叫了 resovle <-- promise
