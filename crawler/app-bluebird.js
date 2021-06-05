@@ -15,10 +15,16 @@ const Promise = require("bluebird");
 //   });
 // }
 
+// 方法1: 一個函是一個函式包
 // 用 bluebird 包 callback 版本的 readFile
-const readFileBlue = Promise.promisify(fs.readFile);
+// const readFile = Promise.promisify(fs.readFile);
 
-readFileBlue("stock.txt", "utf-8")
+// 方法2: 整個 fs 都包起來
+// 把 fs 所有的 function 都包成 promise
+// 但是原本的函式名稱後面會被加上 Async
+const fsBlue = Promise.promisifyAll(fs);
+fsBlue
+  .readFileAsync("stock.txt", "utf-8")
   .then((stockCode) => {
     console.log("stockCode:", stockCode);
 
