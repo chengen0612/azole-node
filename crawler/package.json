@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
     "moment": "^2.29.1"
   },
   "devDependencies": {},
