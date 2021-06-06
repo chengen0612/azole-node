@@ -29,8 +29,10 @@ connection = Promise.promisifyAll(connection);
     let stockCode = await fs.readFile("stock.txt", "utf8");
     console.log(`讀到的 stock code: ${stockCode}`);
     let stock = await connection.queryAsync(
-      `SELECT stock_id FROM stock WHERE stock_id = ${stockCode}`
+      `SELECT stock_id FROM stock WHERE stock_id = ?`,
+      [stockCode]
     );
+    console.log("確認資料庫資料筆數:" + stock.length);
 
     if (stock.length <= 0) {
       console.log("Start to query name");
@@ -42,14 +44,17 @@ connection = Promise.promisifyAll(connection);
       console.log(answers);
       if (answers.length > 1) {
         console.log(`儲存股票名稱 ${answers[0]} ${answers[1]}`);
+        console.log("answers:", answers);
         connection.queryAsync(
-          `INSERT INTO stock (stock_id, stock_name) VALUES ('${answers[0]}', '${answers[1]}');`
+          `INSERT INTO stock (stock_id, stock_name) VALUES (?);`,
+          [answers]
         );
       } else {
         throw "查詢股票名稱錯誤";
       }
     }
   } catch (err) {
+    console.error("我是 catch");
     console.error(err);
   } finally {
     connection.end();
