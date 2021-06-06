@@ -23,6 +23,7 @@ const server = http.createServer(async (req, res) => {
   res.statusCode = 200; // 2xx, 3xx, 4xx, 5xx
   res.setHeader("Content-Type", "text/plain;charset=UTF-8");
 
+  // 路由 router
   switch (path) {
     case "":
       res.end("Hi 這是首頁 我是小賴");
