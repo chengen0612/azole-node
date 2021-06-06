@@ -53,6 +53,28 @@ connection = Promise.promisifyAll(connection);
         throw "查詢股票名稱錯誤";
       }
     }
+
+    // 表示 stock 裡，已經有該 stock id 跟 name 了
+    console.log(`查詢股票成交資料 ${stockCode}`);
+    let prices = await axios.get(
+      "https://www.twse.com.tw/exchangeReport/STOCK_DAY",
+      {
+        params: {
+          response: "json",
+          date: moment().format("YYYYMMDD"),
+          stockNo: stockCode,
+        },
+      }
+    );
+    if (prices.data.stat !== "OK") {
+      throw "查詢股價失敗";
+    }
+    // 處理資料
+    console.log(prices.data.data);
+    // 處理多筆資料
+    // 民國年
+    // '1,639,689,721' 字串、而且有逗號 --> 要處理逗號，然後再轉數字
+    // +13.00 不需要先處理 + - 號
   } catch (err) {
     console.error("我是 catch");
     console.error(err);
