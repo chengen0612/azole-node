@@ -13,6 +13,8 @@ const server = http.createServer(async (req, res) => {
   console.log(req.url);
 
   // 將 url 一般化，移除他的 query string、非必要的結尾斜線，並且一率小寫
+  // req.url
+  // /test?name=ashley --> /test
   const path = req.url.replace(/\/?(?:\?.*)?$/, "").toLocaleLowerCase();
   console.log(`path:${path}`);
 
@@ -22,6 +24,8 @@ const server = http.createServer(async (req, res) => {
 
   res.statusCode = 200; // 2xx, 3xx, 4xx, 5xx
   res.setHeader("Content-Type", "text/plain;charset=UTF-8");
+
+  // request app.js, app.css, ....
 
   // 路由 router
   switch (path) {

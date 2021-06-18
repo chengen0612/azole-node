@@ -1,9 +1,13 @@
 const item = require("./car");
 
-console.log(item);
+const colors = require("./color");
 
-console.log(item.getColor());
+console.log(colors); // color1 = ???  RED ? AAAAA?
 
-item.setColor("Yellow");
+// console.log(item);
 
-console.log(item.getColor());
+// console.log(item.getColor());
+
+// item.setColor("Yellow");
+
+// console.log(item.getColor());
