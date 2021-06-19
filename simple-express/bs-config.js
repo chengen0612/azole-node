@@ -12,7 +12,8 @@
  |
  */
 module.exports = {
-  port: 3001,
+  port: 3001, // 這個是 browser-sync 用的
+  // porxy 真正的 web server
   proxy: "localhost:3000",
   files: ["public/**/*.css", "views/**/*.pug", "public/**/*.js"],
   ignore: ["node_modules"],
