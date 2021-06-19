@@ -1,0 +1,23 @@
+extends ../_layouts/master
+
+block content 
+  h1 這是股票細節頁: #{stock.stock_name}
+
+  table 
+    tr 
+      th 日期
+      th 開盤價
+      th 最高價
+      th 最低價
+      th 收盤價
+    each price in stockPrices
+      tr 
+        td #{price.date}
+        td #{price.open_price}
+        td #{price.high_price}
+        td #{price.low_price}
+        td #{price.close_price}
+    
+  .pagination 
+    - for(var p = 1; p < pagination.lastPage; p++)
+      a(href=`/stock/${stock.stock_id}?page=${p}`, class=p==pagination.currentPage?"active":"") #{p}
