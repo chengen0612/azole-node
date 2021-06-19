@@ -26,7 +26,9 @@ router.get("/:stockCode", async (req, res, next) => {
 
   if (stock.length === 0) {
     // 查不到代碼 not found
-    next(); // ---> 落入 404 那個中間件
+    // 因為是 async 所以不能直接丟 ERROR
+    // throw new Error("Not Found");
+    return next(); // ---> 落入 404 那個中間件
   }
   stock = stock[0];
 

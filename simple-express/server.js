@@ -79,7 +79,7 @@ app.use(function (req, res, next) {
 // 放在所有的路由的後面
 // 這裡一定要有4個參數-->最後的錯誤處理
 app.use(function (err, req, res, next) {
-  console.log(err.message);
+  console.log("ERROR:", err.message);
   res.status(500);
   res.send("500 - Internal Sever Error 請洽系統管理員");
 });
