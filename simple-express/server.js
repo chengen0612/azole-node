@@ -1,3 +1,5 @@
+const connection = require("./utils/db");
+
 // http://expressjs.com/en/starter/hello-world.html
 // 導入 express 這個 package
 const express = require("express");
@@ -10,7 +12,9 @@ let app = express();
 // 可以指定一個或多個目錄是「靜態資源目錄」
 // 自動幫你為 public 裡面的檔案建立路由
 app.use(express.static("public"));
+app.use("/admin", express.static("public-admin"));
 
+// 設定一些 application 變數
 // 第一個是變數 views
 // 第二個是檔案夾名稱
 app.set("views", "views");
@@ -56,6 +60,15 @@ app.get("/test", function (req, res) {
   res.send("Test Express");
 });
 
-app.listen(3000, () => {
+app.get("/stock", async (req, res) => {
+  let queryResults = await connection.queryAsync("SELECT * FROM stock;");
+  res.render("stock/list", {
+    stocks: queryResults,
+  });
+});
+
+app.listen(3000, async () => {
+  // 在 web server 開始的時候，去連線資料庫
+  await connection.connectAsync();
   console.log(`我跑起來了喔 在 port 3000`);
 });
