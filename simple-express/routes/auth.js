@@ -12,6 +12,7 @@ const myStorage = multer.diskStorage({
     // routes/auth.js -> 現在的位置
     // public/uploads -> 希望找到的位置
     // /routes/../public/uploads
+    // ** public/uploads 要先建立好 **
     cb(null, path.join(__dirname, "../", "public", "uploads"));
   },
   filename: function (req, file, cb) {
@@ -97,6 +98,9 @@ router.post(
     //   size: 49405
     // }
 
+    // 檢查有沒有圖片，有圖片才抓
+    let filepath = req.file ? "/uploads/" + req.file.filename : null;
+
     // 如果沒有註冊過，就儲存資料
     // 10: salt
     // bcrypt.hash(req.body.password, 10)
@@ -107,7 +111,7 @@ router.post(
           req.body.email,
           await bcrypt.hash(req.body.password, 10),
           req.body.name,
-          `/uploads/${req.file.filename}`,
+          filepath,
         ],
       ]
     );
