@@ -47,6 +47,10 @@ let stockRouter = require("./routes/stock");
 app.use("/stock", stockRouter);
 let apiRouter = require("./routes/api");
 app.use("/api", apiRouter);
+let authRouter = require("./routes/auth");
+app.use("/auth", authRouter);
+// http://localhost:3000/auth/register
+// http://localhost:3000/auth/login
 
 // 路由 router
 // (request, response) {} 去回應這個請求
