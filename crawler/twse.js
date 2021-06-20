@@ -44,7 +44,7 @@ exports.queryStockData = async function (stockCode) {
     item[0] = parseInt(item[0].replace(/\//g, ""), 10) + 19110000; // 20210601
     item[0] = moment(item[0], "YYYYMMDD").format("YYYY-MM-DD"); // 2021-06-01
     //unshift()=>把data股票代號加入到item陣列的最前端
-    item.unshift(array[i]);
+    item.unshift(stockCode);
     return item;
   });
 };
