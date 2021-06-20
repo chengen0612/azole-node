@@ -1,3 +1,5 @@
+const mysql = require("mysql");
+const Promise = require("bluebird");
 require("dotenv").config();
 
 //設定資料庫連線
@@ -11,4 +13,4 @@ let connection = mysql.createConnection({
 //connection->Promise化
 connection = Promise.promisifyAll(connection);
 
-exports.connection = connection;
+module.exports = connection;
