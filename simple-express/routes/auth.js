@@ -45,6 +45,13 @@ const uploader = multer({
 });
 
 router.get("/register", (req, res) => {
+  if (req.session.member) {
+    req.session.message = {
+      title: "重複登入",
+      text: "你已經登入過嚕",
+    };
+    return res.redirect(303, "/");
+  }
   res.render("auth/register");
 });
 
@@ -121,7 +128,83 @@ router.post(
 );
 
 router.get("/login", (req, res) => {
+  if (req.session.member) {
+    req.session.message = {
+      title: "重複登入",
+      text: "你已經登入過嚕",
+    };
+    return res.redirect(303, "/");
+  }
   res.render("auth/login");
+});
+
+const loginRules = [
+  body("email").isEmail(),
+  body("password").isLength({ min: 6 }),
+];
+router.post("/login", loginRules, async (req, res) => {
+  console.log(req.body);
+
+  const validateResult = validationResult(req);
+  if (!validateResult.isEmpty()) {
+    // 不是空的，就是有問題
+    // 暫時先這樣做
+    return next(new Error("登入資料有問題"));
+  }
+
+  // 檢查一下這個 email 存不存在
+  let member = await connection.queryAsync(
+    "SELECT * FROM members WHERE email = ?",
+    req.body.email
+  );
+  if (member.length === 0) {
+    // 暫時先這樣做
+    return next(new Error("查無此帳號"));
+  }
+  member = member[0];
+
+  // 比對密碼
+  // 因為 bcrypt 每次加密的結果都不一樣，所以不能單純的比對字串
+  // 必須要用 bcrypt 提供的比對函式
+  let result = await bcrypt.compare(req.body.password, member.password);
+  if (result) {
+    // res.session.isLogin = true;
+    req.session.member = {
+      email: member.email,
+      name: member.name,
+      photo: member.photo,
+    };
+
+    // 處理訊息
+    req.session.message = {
+      title: "登入成功",
+      text: "歡迎回到本服務",
+    };
+
+    // status code
+    // 轉跳到首頁
+    res.redirect(303, "/");
+  } else {
+    req.session.member = null;
+
+    // 處理訊息
+    req.session.message = {
+      title: "登入失敗",
+      text: "請填寫正確帳號、密碼",
+    };
+    // 轉跳到登入頁面
+    res.redirect(303, "/auth/login");
+  }
+});
+
+router.get("/logout", (req, res) => {
+  req.session.member = null;
+  // 處理訊息
+  req.session.message = {
+    title: "已登出",
+    text: "歡迎再回來喔～",
+  };
+  res.redirect(303, "/");
 });
 
 module.exports = router;

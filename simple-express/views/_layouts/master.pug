@@ -5,6 +5,9 @@ html
     meta(charset="utf-8")
     link(rel="stylesheet", href="/styles/main.css")
     script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    //- 如果 locals 中有 message 才需要引用
+    if message 
+      script(src="//cdn.jsdelivr.net/npm/sweetalert2@11")
     
     block scripts
 
@@ -13,3 +16,11 @@ html
     #content
       block content
     include footer
+
+  if message
+    script.
+      //- 前端的 javascript
+      Swal.fire({
+        title: "#{message.title}",
+        text: "#{message.text}"
+      })
