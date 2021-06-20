@@ -3,18 +3,20 @@ extends ../_layouts/master
 block content
   h1 註冊表單
 
-  form.form#registerFrm(method="POST", action="/auth/register")
+  form.form#registerFrm(method="POST", action="/auth/register", enctype="multipart/form-data")
     div
       label(for="email") Email
-      input(name="email", type="mail")
+      input(name="email", type="mail", value="")
     div
       label(for="password") 密碼
-      input(name="password", type="password")
+      input(name="password", type="password", value="")
     div
       label(for="confirmPassword") 確認密碼
-      input(name="confirmPassword", type="password")
+      input(name="confirmPassword", type="password", value="")
     div
       label(for="name") 姓名
-      input(name="name", type="text")
-    
+      input(name="name", type="text", value="")
+    div
+      label(for="photo") 照片
+      input(name="photo", type="file")
     button(type="submit") 送出

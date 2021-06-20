@@ -9,6 +9,14 @@ let app = express();
 // module < package < framework
 // express is a package，但完整到足以被稱為是框架
 
+// npm i body-parser
+// const bodyParser = reqiure("body-parser");
+// app.use(bodyParser.urlencoded({ extended: false }));
+// 但是， express 在某版本後，有把 epxress.urlencoded 加回來了
+// 所以就可以直接用
+// 加上這個中間件，我們就可以解讀 post 過來的資料
+app.use(express.urlencoded({ extended: false }));
+
 // 可以指定一個或多個目錄是「靜態資源目錄」
 // 自動幫你為 public 裡面的檔案建立路由
 // /javascripts/api.js
