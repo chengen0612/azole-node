@@ -13,4 +13,5 @@ let connection = mysql.createConnection({
 //connection->Promise化
 connection = Promise.promisifyAll(connection);
 
+// 匯出
 module.exports = connection;
