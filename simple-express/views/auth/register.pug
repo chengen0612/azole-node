@@ -1,0 +1,20 @@
+extends ../_layouts/master
+
+block content
+  h1 註冊表單
+
+  form.form#registerFrm(method="POST", action="/auth/register")
+    div
+      label(for="email") Email
+      input(name="email", type="mail")
+    div
+      label(for="password") 密碼
+      input(name="password", type="password")
+    div
+      label(for="confirmPassword") 確認密碼
+      input(name="confirmPassword", type="password")
+    div
+      label(for="name") 姓名
+      input(name="name", type="text")
+    
+    button(type="submit") 送出
