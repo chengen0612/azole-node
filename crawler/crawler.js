@@ -20,7 +20,7 @@ const connection = require("./db");
       //   console.log(stock);
       //stock.length <= 0 ， 如果我們輸入的代碼資料庫找不到，執行axios抓取
       if (stock.length <= 0) {
-        let stockNoName = twse.queryStockName(array[i]);
+        let stockNoName = await twse.queryStockName(array[i]);
 
         //stockNoName[0],stockNoName[1]
         //抓取的資料有[stock_id, stock_name],寫入資料庫
@@ -36,7 +36,7 @@ const connection = require("./db");
 
       //到這一步表示stock資料庫已經有了或著已建入新的stock_id 跟 stock_name
       console.log(`查詢的股票: ${array[i]} 成交資料`);
-      let stockPriceData = twse.queryStockData(array[i]);
+      let stockPriceData = await twse.queryStockData(array[i]);
       //處理資料
       let insertPromises = stockPriceData.map((item) => {
         //鍵入資料庫 stock_price
