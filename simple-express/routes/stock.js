@@ -28,7 +28,13 @@ router.get("/:stockCode", async (req, res, next) => {
     // 查不到代碼 not found
     // 因為是 async 所以不能直接丟 ERROR
     // throw new Error("Not Found");
-    return next(); // ---> 落入 404 那個中間件
+    return next(); // ---> 落入下一個中間件，但下一個是誰？？？ 這裡不用知道
+    // 如果不加上 return，當 next() 執行完畢後，
+    // 會回來這裡，繼續下面的程式碼
+
+    // next 裡只要有放參數，他就會跳到 express 預設處理錯誤中間函式
+    // 預設處理錯誤中間函式 就是有四個參數的那個中間函式
+    // return next(new Error("查無代碼"));
   }
   stock = stock[0];
 

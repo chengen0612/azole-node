@@ -11,6 +11,9 @@ let app = express();
 
 // 可以指定一個或多個目錄是「靜態資源目錄」
 // 自動幫你為 public 裡面的檔案建立路由
+// /javascripts/api.js
+// /styles/main.css
+// /images/101.jpeg
 app.use(express.static("public"));
 // app.use("/admin", express.static("public-admin"));
 
@@ -37,6 +40,7 @@ app.use(function (req, res, next) {
   console.log("無用 Middleware");
   // 「幾乎」都要呼叫，讓他往下繼續
   next();
+  console.log("after 無用 middleware");
 });
 
 let stockRouter = require("./routes/stock");
@@ -48,6 +52,7 @@ app.use("/api", apiRouter);
 // (request, response) {} 去回應這個請求
 app.get("/", function (req, res) {
   // res.send("Hello Express BBB");
+  console.log("這裡是首頁");
   res.render("index");
   // views/index.pug
 });
@@ -67,6 +72,11 @@ app.get("/test", function (req, res) {
   next();
 });
 
+app.use(function (req, res, next) {
+  console.log("啊啊啊，有人 404 了!!!");
+  next();
+});
+
 // 所有的路由的下面
 app.use(function (req, res, next) {
   // 表示前面的路由都找不到
@@ -78,6 +88,7 @@ app.use(function (req, res, next) {
 // 500 error
 // 放在所有的路由的後面
 // 這裡一定要有4個參數-->最後的錯誤處理
+// express 預設的錯誤處理函式
 app.use(function (err, req, res, next) {
   console.log("ERROR:", err.message);
   res.status(500);
