@@ -4,7 +4,14 @@ ul
     a(href="/") 首頁
   li 
     a(href="/stock") 股票資料
-  li
-    a(href="/auth/login") 登入
-  li
-    a(href="/auth/register") 註冊
+  //- 是因為我們有透過 res.locals 傳遞了 member
+  if member
+    li 
+      a(href="/member") 會員中心
+    li
+      a(href="/auth/logout") 登出
+  else
+    li
+      a(href="/auth/login") 登入
+    li
+      a(href="/auth/register") 註冊
