@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const authMW = require("../middlewares/auth");
 const connection = require("../utils/db");
 
 router.get("/", async (req, res) => {
@@ -17,65 +17,70 @@ router.get("/", async (req, res) => {
 
 // 作法1: /:stockCode?page=2 第二頁
 // 作法2: /:stockCode/:page
-router.get("/:stockCode", async (req, res, next) => {
-  // 檢查是否有這個代碼
-  let stock = await connection.queryAsync(
-    "SELECT * FROM stock WHERE stock_id=?;",
-    req.params.stockCode
-  );
+router.get(
+  "/:stockCode",
+  // 加上檢查是否登入的中間函式
+  authMW.loginCheckMiddleware,
+  async (req, res, next) => {
+    // 檢查是否有這個代碼
+    let stock = await connection.queryAsync(
+      "SELECT * FROM stock WHERE stock_id=?;",
+      req.params.stockCode
+    );
 
-  if (stock.length === 0) {
-    // 查不到代碼 not found
-    // 因為是 async 所以不能直接丟 ERROR
-    // throw new Error("Not Found");
-    return next(); // ---> 落入下一個中間件，但下一個是誰？？？ 這裡不用知道
-    // 如果不加上 return，當 next() 執行完畢後，
-    // 會回來這裡，繼續下面的程式碼
+    if (stock.length === 0) {
+      // 查不到代碼 not found
+      // 因為是 async 所以不能直接丟 ERROR
+      // throw new Error("Not Found");
+      return next(); // ---> 落入下一個中間件，但下一個是誰？？？ 這裡不用知道
+      // 如果不加上 return，當 next() 執行完畢後，
+      // 會回來這裡，繼續下面的程式碼
 
-    // next 裡只要有放參數，他就會跳到 express 預設處理錯誤中間函式
-    // 預設處理錯誤中間函式 就是有四個參數的那個中間函式
-    // return next(new Error("查無代碼"));
+      // next 裡只要有放參數，他就會跳到 express 預設處理錯誤中間函式
+      // 預設處理錯誤中間函式 就是有四個參數的那個中間函式
+      // return next(new Error("查無代碼"));
+    }
+    stock = stock[0];
+
+    // 分頁
+    // 一頁有幾筆？
+    // 現在在第幾頁？
+    // 總共有多少筆數？ --> 總頁數
+
+    // 總共有幾筆？？
+    let count = await connection.queryAsync(
+      "SELECT COUNT(*) as total FROM stock_price WHERE stock_id=?;",
+      req.params.stockCode
+    );
+    // console.log(count);
+    // [ RowDataPacket { total: 74 } ]
+    const total = count[0].total;
+    const perPage = 10; // 一頁 10 筆
+    const lastPage = Math.ceil(total / perPage);
+
+    // 現在在第幾頁？
+    // http://localhost:3001/stock/2330
+    const currentPage = req.query.page || 1;
+    const offset = (currentPage - 1) * perPage;
+    // page 1 -> 0
+    // page 2 -> 10
+    // page 3 -> 20
+
+    let queryResults = await connection.queryAsync(
+      "SELECT * FROM stock_price WHERE stock_id = ? ORDER BY date LIMIT ? OFFSET ?;",
+      [req.params.stockCode, perPage, offset]
+    );
+
+    res.render("stock/detail", {
+      stock,
+      stockPrices: queryResults,
+      pagination: {
+        lastPage,
+        currentPage,
+        total,
+      },
+    });
   }
-  stock = stock[0];
-
-  // 分頁
-  // 一頁有幾筆？
-  // 現在在第幾頁？
-  // 總共有多少筆數？ --> 總頁數
-
-  // 總共有幾筆？？
-  let count = await connection.queryAsync(
-    "SELECT COUNT(*) as total FROM stock_price WHERE stock_id=?;",
-    req.params.stockCode
-  );
-  // console.log(count);
-  // [ RowDataPacket { total: 74 } ]
-  const total = count[0].total;
-  const perPage = 10; // 一頁 10 筆
-  const lastPage = Math.ceil(total / perPage);
-
-  // 現在在第幾頁？
-  // http://localhost:3001/stock/2330
-  const currentPage = req.query.page || 1;
-  const offset = (currentPage - 1) * perPage;
-  // page 1 -> 0
-  // page 2 -> 10
-  // page 3 -> 20
-
-  let queryResults = await connection.queryAsync(
-    "SELECT * FROM stock_price WHERE stock_id = ? ORDER BY date LIMIT ? OFFSET ?;",
-    [req.params.stockCode, perPage, offset]
-  );
-
-  res.render("stock/detail", {
-    stock,
-    stockPrices: queryResults,
-    pagination: {
-      lastPage,
-      currentPage,
-      total,
-    },
-  });
-});
+);
 
 module.exports = router;
