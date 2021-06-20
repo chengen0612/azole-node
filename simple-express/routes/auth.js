@@ -79,7 +79,13 @@ router.post(
     if (!validateResult.isEmpty()) {
       // 不是空的，就是有問題
       // 暫時先這樣做
-      return next(new Error("註冊表單資料有問題"));
+      // return next(new Error("註冊表單資料有問題"));
+      let error = validateResult.array();
+      req.session.message = {
+        title: "資料錯誤",
+        text: error[0].msg,
+      };
+      return res.redirect(303, "/auth/register");
     }
 
     // 先檢查這個 email 是否已經註冊過
@@ -89,7 +95,13 @@ router.post(
     );
     if (checkResult.length > 0) {
       // 暫時先這樣做
-      return next(new Error("已經註冊過了"));
+      // return next(new Error("已經註冊過了"));
+      let error = validateResult.array();
+      req.session.message = {
+        title: "此 email 已經註冊",
+        text: "歡迎重新登入",
+      };
+      return res.redirect(303, "/auth/login");
     }
 
     // 取得上傳檔案
@@ -123,7 +135,11 @@ router.post(
       ]
     );
 
-    res.send("恭喜，註冊成功");
+    req.session.message = {
+      title: "註冊成功",
+      text: "歡迎登入使用本服務",
+    };
+    return res.redirect(303, "/auth/login");
   }
 );
 
@@ -149,7 +165,12 @@ router.post("/login", loginRules, async (req, res) => {
   if (!validateResult.isEmpty()) {
     // 不是空的，就是有問題
     // 暫時先這樣做
-    return next(new Error("登入資料有問題"));
+    // return next(new Error("登入資料有問題"));
+    req.session.message = {
+      title: "登入失敗",
+      text: "請填寫正確帳號、密碼",
+    };
+    return res.redirect(303, "/auth/login");
   }
 
   // 檢查一下這個 email 存不存在
@@ -159,7 +180,13 @@ router.post("/login", loginRules, async (req, res) => {
   );
   if (member.length === 0) {
     // 暫時先這樣做
-    return next(new Error("查無此帳號"));
+    // return next(new Error("查無此帳號"));
+    // 一般來說，登入失敗的時候，可能不
+    req.session.message = {
+      title: "登入失敗",
+      text: "查無此帳號",
+    };
+    return res.redirect(303, "/auth/register");
   }
   member = member[0];
 
